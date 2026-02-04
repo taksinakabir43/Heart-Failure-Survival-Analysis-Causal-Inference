@@ -1,0 +1,13 @@
+install.packages("survival")
+install.packages("survminer")
+library(survival)
+library(survminer)
+data=heart_failure_clinical_records_dataset
+survival_object=Surv(time=data$time, event=data$DEATH_EVENT)
+fit=survfit(survival_object~data$sex,data=data)
+summary(fit)
+log_rank=survdiff(survival_object~data$sex, data=data)
+print(log_rank)
+ggsurvplot(fit, data=data, risk.table=TRUE,conf.int =TRUE,pval = TRUE,title="SurvivalAnalysis:Heart Failure Patients", legend.labs=c('Female','Male'),  palette = c("#E7B800", "#2E9FDF"))
+cox_model=coxph(survival_object~age+high_blood_pressure+serum_creatinine,data=data)
+summary(cox_model)
